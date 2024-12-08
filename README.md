@@ -22,7 +22,7 @@ Two datasets will be provided in the starter code on the following page to exper
    - Using GitHub Actions.
 
 6. **Continuous Deployment**:
-    - Deploying the FastAPI application to Heroku.
+    - Deploying the FastAPI application to Render.
 
 ## Project Repository
 
@@ -60,6 +60,20 @@ FastAPI automatically generates API documentation. Access it at:
 Deployed API running locally:
 
 ![API Screenshot](screenshots/example.png)
+
+Deployed API running live in Render:
+
+* CD:
+
+![API Screenshot](screenshots/continuous_deployment.png)
+
+* GET:
+
+![API Screenshot](screenshots/live_get.png)
+
+* POST:
+
+![API Screenshot](screenshots/live_post.png)
 
 ## Testing the Project
 

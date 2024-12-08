@@ -1,9 +1,10 @@
-numpy
-pandas
-scikit-learn
-pytest
-requests
+numpy==1.24.4
+pandas==2.0.3
+scikit-learn==1.3.2
+pytest==8.3.4
+requests==2.32.3
 fastapi==0.63.0
-uvicorn
+uvicorn==0.32.1
 gunicorn
-pydantic-settings
+pydantic-settings==2.6.1
+typing-extensions==4.12.2

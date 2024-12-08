@@ -10,7 +10,7 @@ class CleanData:
     _bin_cols = ["sex", "salary"]
 
     def process(self, data_path: Path, name: str, save_cleaned: bool = False) -> pd.DataFrame:
-        df = self._read_data(data_path, name)
+        df = self.read_data(data_path, name)
         self._print_info(df)
         df = self._remove_whitespaces(df)
         df = self._assign_correct_type_to_features(df)
@@ -20,7 +20,7 @@ class CleanData:
         return df
 
     @staticmethod
-    def _read_data(data_path: Path, name: str) -> pd.DataFrame:
+    def read_data(data_path: Path, name: str) -> pd.DataFrame:
         file_path = data_path / name
         return pd.read_csv(file_path)
 

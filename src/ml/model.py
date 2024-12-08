@@ -1,16 +1,7 @@
 from typing import Tuple
-
 from sklearn.metrics import fbeta_score, precision_score, recall_score
-
-import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import joblib
-
-
-def get_train_test_data(X: pd.DataFrame, y: pd.Series) -> tuple:
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    return X_train, X_test, y_train, y_test
 
 
 def train_model(X_train, y_train):
@@ -34,15 +25,17 @@ def train_model(X_train, y_train):
     return model
 
 
-def save_model(model, encoder, model_path, encoder_path):
+def save_model(model, encoder, lb, model_path, encoder_path, lb_path):
     joblib.dump(model, model_path)
+    joblib.dump(lb, lb_path)
     joblib.dump(encoder, encoder_path)
 
 
-def load_model(model_path, encoder_path):
+def load_model(model_path, encoder_path, lb_path):
     model = joblib.load(model_path)
     encoder = joblib.load(encoder_path)
-    return model, encoder
+    lb = joblib.load(lb_path)
+    return model, encoder, lb
 
 
 def inference(model, X):

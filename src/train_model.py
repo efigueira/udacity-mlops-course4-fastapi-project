@@ -1,28 +1,37 @@
-from pathlib import Path
+from sklearn.model_selection import train_test_split
+
 from ml import CleanData, process_data
-from ml import get_train_test_data, train_model, save_model, load_model, inference, compute_model_metrics
+from ml import train_model, save_model, load_model, inference, compute_model_metrics
+from environment import Config
 
+config = Config()
 
-cat_features = ["workclass", "education", "marital-status", "occupation", "relationship", "race", "sex", "native-country"]
-
-DATA_DIR_PATH = Path(__file__).parent.parent / 'data'
-MODEL_DIR_PATH = Path(__file__).parent.parent / 'model'
-model_path = MODEL_DIR_PATH / "model.pkl"
-encoder_path = MODEL_DIR_PATH / "encoder.pkl"
-
-df = CleanData().process(data_path=DATA_DIR_PATH, name='census.csv')
-X, y, encoder, lb = process_data(X=df, categorical_features=cat_features, label='salary', training=True)
+# Clean data
+df = CleanData().process(data_path=config.data_dir_path, name=config.data_file)
 
 # Split data
-X_train, X_test, y_train, y_test = get_train_test_data(X, y)
+train, test = train_test_split(df, test_size=0.2)
+
+# Process data
+X_train, y_train, encoder, lb = process_data(X=train,
+                                             categorical_features=config.cat_features,
+                                             label='salary',
+                                             training=True)
+X_test, y_test, _, _ = process_data(X=test,
+                                    categorical_features=config.cat_features,
+                                    label='salary',
+                                    training=False,
+                                    encoder=encoder,
+                                    lb=lb)
 
 # Train model
 model = train_model(X_train, y_train)
 
 # Save model and encoder
-save_model(model, encoder, model_path=model_path, encoder_path=encoder_path)
+save_model(model, encoder, lb, model_path=config.model_path, encoder_path=config.encoder_path, lb_path=config.lb_path)
 # Load model and encoder for inference
-loaded_model, loaded_encoder = load_model(model_path=model_path, encoder_path=encoder_path)
+loaded_model, loaded_encoder, lb = load_model(model_path=config.model_path, encoder_path=config.encoder_path,
+                                              lb_path=config.lb_path)
 
 # Perform inference
 predictions = inference(loaded_model, X_test)

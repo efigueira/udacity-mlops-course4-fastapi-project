@@ -4,18 +4,53 @@ import pandas as pd
 from pathlib import Path
 
 
-def clean_data(data_path: str, name: str):
-    data_folder = Path(data_path)
-    file_path = data_folder / name
-    data = pd.read_csv(file_path)
-    print(data.head())
-    print(data.info())
+class CleanData:
+    _int_cols = ["age", "fnlgt", "education-num", "capital-gain", "capital-loss", "hours-per-week"]
+    _cat_cols = ["workclass", "education", "marital-status", "occupation", "relationship", "race", "native-country"]
+    _bin_cols = ["sex", "salary"]
 
-    data.columns = [col.replace(" ", "") for col in data.columns]
-    data = data.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+    def process(self, data_path: Path, name: str, save_cleaned: bool = False) -> pd.DataFrame:
+        df = self._read_data(data_path, name)
+        self._print_info(df)
+        df = self._remove_whitespaces(df)
+        df = self._assign_correct_type_to_features(df)
+        self._print_info(df)
+        if save_cleaned:
+            self._save_clean_data(df=df, data_folder=data_path, name=name)
+        return df
 
-    cleaned_file_path = data_folder / (Path(name).stem + "_cleaned.csv")
-    data.to_csv(cleaned_file_path, index=False)
+    @staticmethod
+    def _read_data(data_path: Path, name: str) -> pd.DataFrame:
+        file_path = data_path / name
+        return pd.read_csv(file_path)
+
+    @staticmethod
+    def _save_clean_data(df: pd.DataFrame, data_folder: Path, name: str) -> pd.DataFrame:
+        cleaned_file_path = data_folder / (Path(name).stem + "_cleaned.csv")
+        df.to_csv(cleaned_file_path, index=False)
+        return df
+
+    @staticmethod
+    def _print_info(df: pd.DataFrame):
+        print(df.head(5))
+        print(df.info())
+
+    def _assign_correct_type_to_features(self, df: pd.DataFrame) -> pd.DataFrame:
+        df[self._int_cols] = df[self._int_cols].astype("int")
+        df[self._cat_cols] = df[self._cat_cols].astype("category")
+        df[self._bin_cols] = df[self._bin_cols].apply(
+            lambda col: col.map({"Male": 1, "Female": 0}) if col.name == "sex" else col.map({">50K": 1, "<=50K": 0}))
+        return df
+
+    @staticmethod
+    def _remove_whitespaces(df: pd.DataFrame) -> pd.DataFrame:
+        df.columns = [col.replace(" ", "") for col in df.columns]
+        df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+        return df
+
+    @property
+    def cat_cols(self):
+        return self._cat_cols
 
 
 def process_data(

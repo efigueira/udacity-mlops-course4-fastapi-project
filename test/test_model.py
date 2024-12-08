@@ -6,9 +6,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-from src.environment import Config
-from src.ml.data import CleanData, process_data
-from src.ml.model import (train_model, inference, compute_model_metrics)
+from src.environment import Config  # noqa: E402
+from src.ml.data import CleanData, process_data  # noqa: E402
+from src.ml.model import \
+    (train_model, inference, compute_model_metrics)  # noqa: E402
 
 
 # Setup common test data for all tests

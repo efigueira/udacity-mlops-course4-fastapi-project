@@ -67,7 +67,6 @@ class InferenceData(BaseModel):
         }
 
 
-
 @app.get("/")
 def greeting():
     return {"greeting": "Welcome to the API!"}

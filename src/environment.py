@@ -11,11 +11,14 @@ class Config(BaseSettings):
     lb_path: Path = model_dir_path / "lb.pkl"
     encoder_path: Path = model_dir_path / "encoder.pkl"
 
-    cat_features: list = ["workclass", "education", "marital-status", "occupation", "relationship", "race", "sex", "native-country"]
+    cat_features: list = ["workclass", "education", "marital-status",
+                          "occupation", "relationship", "race", "sex",
+                          "native-country"]
 
     class Config:
         env_file = ".env"
         protected_namespaces = ('settings_',)
+
 
 if __name__ == "__main__":
     config = Config()

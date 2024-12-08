@@ -57,7 +57,8 @@ def inference(model, X):
 
 def compute_model_metrics(y, preds) -> Tuple[float, float, float]:
     """
-    Validates the trained machine learning model using precision, recall, and F1.
+    Validates the trained machine learning model using precision, recall,
+    and F1.
 
     Inputs
     ------

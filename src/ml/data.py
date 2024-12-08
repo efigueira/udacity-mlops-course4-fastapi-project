@@ -6,11 +6,14 @@ from pathlib import Path
 
 
 class CleanData:
-    _int_cols = ["age", "fnlgt", "education-num", "capital-gain", "capital-loss", "hours-per-week"]
-    _cat_cols = ["workclass", "education", "marital-status", "occupation", "relationship", "race", "native-country"]
+    _int_cols = ["age", "fnlgt", "education-num", "capital-gain",
+                 "capital-loss", "hours-per-week"]
+    _cat_cols = ["workclass", "education", "marital-status", "occupation",
+                 "relationship", "race", "native-country"]
     _bin_cols = ["sex", "salary"]
 
-    def process(self, data_path: Path, name: str, save_cleaned: bool = False) -> pd.DataFrame:
+    def process(self, data_path: Path, name: str, save_cleaned: bool = False) \
+            -> pd.DataFrame:
         df = self.read_data(data_path, name)
         self._print_info(df)
         df = self._remove_whitespaces(df)
@@ -21,7 +24,8 @@ class CleanData:
         return df
 
     def process_inference(self, data: BaseModel) -> pd.DataFrame:
-        df = pd.DataFrame.from_dict(data.model_dump(by_alias=True), orient="index").T
+        df = pd.DataFrame.from_dict(data.model_dump(by_alias=True),
+                                    orient="index").T
         df = self._remove_whitespaces(df)
         df = self._assign_correct_type_to_features(df)
         return df
@@ -32,7 +36,8 @@ class CleanData:
         return pd.read_csv(file_path)
 
     @staticmethod
-    def _save_clean_data(df: pd.DataFrame, data_folder: Path, name: str) -> pd.DataFrame:
+    def _save_clean_data(df: pd.DataFrame, data_folder: Path, name: str) \
+            -> pd.DataFrame:
         cleaned_file_path = data_folder / (Path(name).stem + "_cleaned.csv")
         df.to_csv(cleaned_file_path, index=False)
         return df
@@ -42,7 +47,8 @@ class CleanData:
         print(df.head(5))
         print(df.info())
 
-    def _assign_correct_type_to_features(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _assign_correct_type_to_features(self, df: pd.DataFrame) \
+            -> pd.DataFrame:
         df[self._int_cols] = df[self._int_cols].astype("int")
         df[self._cat_cols] = df[self._cat_cols].astype("category")
         if "salary" in df.columns:
@@ -65,26 +71,32 @@ class CleanData:
 
 
 def process_data(
-    X, categorical_features=[], label=None, training=True, encoder=None, lb=None
+        X,
+        categorical_features=[],
+        label=None,
+        training=True,
+        encoder=None,
+        lb=None
 ):
     """ Process the data used in the machine learning pipeline.
 
-    Processes the data using one hot encoding for the categorical features and a
-    label binarizer for the labels. This can be used in either training or
+    Processes the data using one hot encoding for the categorical features and
+    a label binarizer for the labels. This can be used in either training or
     inference/validation.
 
-    Note: depending on the type of model used, you may want to add in functionality that
-    scales the continuous data.
+    Note: depending on the type of model used, you may want to add in
+    functionality that scales the continuous data.
 
     Inputs
     ------
     X : pd.DataFrame
-        Dataframe containing the features and label. Columns in `categorical_features`
+        Dataframe containing the features and label. Columns in
+        `categorical_features`
     categorical_features: list[str]
         List containing the names of the categorical features (default=[])
     label : str
-        Name of the label column in `X`. If None, then an empty array will be returned
-        for y (default=None)
+        Name of the label column in `X`. If None, then an empty array will be
+        returned for y (default=None)
     training : bool
         Indicator if training mode or inference/validation mode.
     encoder : sklearn.preprocessing._encoders.OneHotEncoder
@@ -99,10 +111,12 @@ def process_data(
     y : np.array
         Processed labels if labeled=True, otherwise empty np.array.
     encoder : sklearn.preprocessing._encoders.OneHotEncoder
-        Trained OneHotEncoder if training is True, otherwise returns the encoder passed
+        Trained OneHotEncoder if training is True, otherwise returns the
+        encoder passed
         in.
     lb : sklearn.preprocessing._label.LabelBinarizer
-        Trained LabelBinarizer if training is True, otherwise returns the binarizer
+        Trained LabelBinarizer if training is True, otherwise returns the
+         binarizer
         passed in.
     """
 

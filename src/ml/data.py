@@ -1,4 +1,5 @@
 import numpy as np
+from pydantic import BaseModel
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 import pandas as pd
 from pathlib import Path
@@ -17,6 +18,12 @@ class CleanData:
         self._print_info(df)
         if save_cleaned:
             self._save_clean_data(df=df, data_folder=data_path, name=name)
+        return df
+
+    def process_inference(self, data: BaseModel) -> pd.DataFrame:
+        df = pd.DataFrame.from_dict(data.model_dump(by_alias=True), orient="index").T
+        df = self._remove_whitespaces(df)
+        df = self._assign_correct_type_to_features(df)
         return df
 
     @staticmethod
@@ -38,8 +45,12 @@ class CleanData:
     def _assign_correct_type_to_features(self, df: pd.DataFrame) -> pd.DataFrame:
         df[self._int_cols] = df[self._int_cols].astype("int")
         df[self._cat_cols] = df[self._cat_cols].astype("category")
-        df[self._bin_cols] = df[self._bin_cols].apply(
-            lambda col: col.map({"Male": 1, "Female": 0}) if col.name == "sex" else col.map({">50K": 1, "<=50K": 0}))
+        if "salary" in df.columns:
+            df[self._bin_cols] = df[self._bin_cols].apply(
+                lambda col: col.map({"Male": 1, "Female": 0})
+                if col.name == "sex" else col.map({">50K": 1, "<=50K": 0}))
+        else:
+            df['sex'] = df['sex'].apply(lambda x: {"Male": 1, "Female": 0}[x])
         return df
 
     @staticmethod

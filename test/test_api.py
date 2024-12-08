@@ -1,10 +1,10 @@
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from main import app
 import pytest
 from fastapi.testclient import TestClient
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from main import app
+
 
 client = TestClient(app)
 
@@ -47,6 +47,7 @@ def user_less_equal_50k():
         "hours-per-week": 20,
         "native-country": "United-States"
     }
+
 
 def test_get_greeting():
     response = client.get("/")

@@ -1,16 +1,14 @@
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
 import numpy as np
 import pytest
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from src.environment import Config
 from src.ml.data import CleanData, process_data
-from src.ml.model import (train_model, save_model, load_model, inference,
-                          compute_model_metrics)
+from src.ml.model import (train_model, inference, compute_model_metrics)
 
 
 # Setup common test data for all tests
